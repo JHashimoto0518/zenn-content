@@ -3,7 +3,7 @@ title: "SteampipeとExcel Power Queryで実現するAWS構成定義書自動化�
 emoji: "📝"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["AWS", "Excel", "PowerQuery", "Steampipe", "構成定義書"]
-published: false
+published: true
 ---
 
 ## はじめに
