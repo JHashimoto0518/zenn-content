@@ -1,5 +1,5 @@
 ---
-title: "SteampipeとExcel Power Queryで実現するAWS構成定義書自動生成ガイド"
+title: "SteampipeとExcel Power Queryで実現するAWS構成定義書自動化ガイド"
 emoji: "📝"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["AWS", "Excel", "PowerQuery", "Steampipe", "構成定義書"]
@@ -10,11 +10,11 @@ published: false
 
 手動による AWS 環境構成定義書の作成は、継続的なメンテナンスが必要であり、大きな負担となります。また、情報の更新漏れや整合性の欠如など、多くの問題が生じます。  
 
-本記事では、Steampipe を用いて AWS リソースの属性情報を CSV 形式で出力し、その CSV ファイルを Excel の Power Query 機能で読み込むことで、構成定義書を自動生成する手法を解説します。
+本記事では、Steampipe を用いて AWS リソースの属性情報を CSV 形式で抽出し、その CSV ファイルを Excel の Power Query 機能で読み込むことで、構成定義書の作成プロセスを大幅に自動化します。CSV ファイルの抽出や Excel へのインポートは手動操作が必要ですが、その手順自体はシンプルで再現性があります。
 
 ## 構成定義書のサンプル
 
-以下は、本手法で作成できる構成定義書のサンプルです。この例では、EC2 インスタンスの構成情報を取得し、Excel シートに出力しています。
+以下は、本手法で作成できる構成定義書のサンプルです。この例では、EC2 インスタンスの構成情報を取得し、Excel シートに読み込んでいます。
 
 ![alt text](/images/spac/image-3.png)
 
@@ -34,9 +34,9 @@ published: false
 
   システムのライフサイクルに依存せず、いつでも最新の情報を取得できます。特に、構成定義書が存在しない、あるいは定義書を更新できずに陳腐化してしまった状況において、システムの実態を把握するために有効です。  
 
-## 構成情報を CSV で出力する
+## 構成情報を CSV で抽出する
 
-このセクションでは、Steampipe の概要とセットアップ方法、そして実際に AWS リソース（ここでは EC2 インスタンス）の構成情報を CSV 形式で出力する手順を説明します。
+このセクションでは、Steampipe の概要とセットアップ方法、そして実際に AWS リソース（ここでは EC2 インスタンス）の構成情報を CSV 形式で抽出する手順を説明します。
 
 ### Steampipe とは
 
@@ -73,9 +73,9 @@ Steampipe はホームディレクトリの外部にインストールされる�
 > Steampipe is also available as a binary executable (or you can build from source). To manually install Steampipe, unzip the executable and move it to a directory included in your system"s PATH. You can access the source, zipped executables and binary checksums from the releases section of the Steampipe Github repo.
 :::
 
-### EC2 インスタンスの構成情報を出力する
+### EC2 インスタンスの構成情報を抽出する
 
-以下の手順で、AWS の EC2 インスタンスの構成情報を CSV 形式で出力します。
+以下の手順で、AWS の EC2 インスタンスの構成情報を CSV 形式で抽出します。
 
 https://hub.steampipe.io/plugins/turbot/aws/tables/aws_ec2_instance
 
@@ -105,13 +105,13 @@ https://hub.steampipe.io/plugins/turbot/aws/tables/aws_ec2_instance
     EOF
     ```
 
-2. Steampipe を利用して SQL クエリを実行し、結果を CSV ファイルに出力する
+2. Steampipe を利用して SQL クエリを実行し、結果を CSV ファイルに抽出する
 
     ```bash
     steampipe query --output csv ./ec2-ins.sql > ./ec2-ins.csv
     ```
 
-    出力される CSV ファイルのサンプルです。※出力に ID 等が含まれますが、該当環境は検証後に削除済みです
+    抽出される CSV ファイルのサンプルです。※出力に ID 等が含まれますが、該当環境は検証後に削除済みです
 
     ```bash
     cat ./ec2-ins.csv 
@@ -122,29 +122,29 @@ https://hub.steampipe.io/plugins/turbot/aws/tables/aws_ec2_instance
 
 3. CloudShell のメニューから CSV ファイルをダウンロードする
   
-    CloudShell のメニューから「アクション」→「ファイルのダウンロード」を選択し、`ec2-ins.csv` をダウンロードします。
+    CloudShell のメニューから[アクション]→[ファイルのダウンロード]を選択し、`ec2-ins.csv` をダウンロードします。
 
 ## 構成情報を Excel シートに読み込む
 
-このセクションでは、Power Query の概要と、先のセクションで出力した CSV ファイルを Excel シートに取り込む手順について説明します。
+このセクションでは、Power Query の概要と、先のセクションで抽出した CSV ファイルを Excel シートに取り込む手順について説明します。
 
 ### Power Queryとは
 
-Power Query は、Excel に組み込まれたデータ取得および変換ツールで、さまざまなデータソースから情報を取り込み、整形できる機能です。これにより、Steampipe で出力した CSV ファイルのデータを Excel シートに読み込むことが可能となります。
+Power Query は、Excel に組み込まれたデータ取得および変換ツールで、さまざまなデータソースから情報を取り込み、整形できる機能です。これにより、Steampipe で抽出した CSV ファイルのデータを Excel シートに読み込むことが可能となります。
 
 ### CSV ファイルを Excel シートに読み込む手順
 
 1. Excel を起動し、[データ]タブを選択する
-2. 「データの取得」→「テキストまたは CSV から」をクリックし、先ほどダウンロードした`ec2-ins.csv`を選択する
-3. 「データの変換」をクリックする
+2. [データの取得]→[テキストまたは CSV から]をクリックし、先ほどダウンロードした`ec2-ins.csv`を選択する
+3. [データの変換]をクリックする
 
     ![alt text](/images/spac/image.png)
 
-4. Power Query エディターが起動したら、「１行目をヘッダーとして使用」をクリックする
+4. Power Query エディターが起動したら、[１行目をヘッダーとして使用]をクリックする
 
     ![alt text](/images/spac/image-1.png)
 
-5. 設定が完了したら、「読み込み」をクリックして、Excel シートにデータをインポートする
+5. 設定が完了したら、[読み込み]をクリックして、Excel シートにデータをインポートする
 
     ![alt text](/images/spac/image-2.png)
 
@@ -163,9 +163,9 @@ Steampipe で取得した構成情報は、最新の情報です。そのため�
 - Bastion インスタンスのインスタンスタイプを `t2.micro` から `t3.micro` に変更
 - Web2 インスタンスを追加
 
-環境を変更した後で、`EC2 インスタンスの構成情報を出力する`セクションの手順をもう一度実行し、出力された CSV ファイルで先に出力したファイルを上書きします。
+環境を変更した後で、`EC2 インスタンスの構成情報を抽出する`セクションの手順をもう一度実行し、抽出された CSV ファイルで先に出力したファイルを上書きします。
 
-次に、Excel のテーブルを右クリックし「更新」を実行すると、最新の CSV ファイルが読み込まれ、テーブルが更新されます。
+次に、Excel のテーブルを右クリックし[更新]を実行すると、最新の CSV ファイルが読み込まれ、テーブルが更新されます。
 
 ![alt text](/images/spac/image-4.png)
 
