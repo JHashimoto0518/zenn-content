@@ -16,7 +16,7 @@ published: true
 
 以下は、本手法で作成できる構成定義書のサンプルです。この例では、EC2 インスタンスの構成情報を取得し、Excel シートに読み込んでいます。
 
-![alt text](/images/spac/image-3.png)
+https://github.com/JHashimoto0518/zenn-content/blob/main/images/spac/image-3.png
 
 ## 本手法のメリット
 
@@ -150,9 +150,7 @@ Power Query は、Excel に組み込まれたデータ取得および変換ツ�
 
 CSV データを元に Excel のテーブルが作成されます。これが構成定義書となります。
 
-サンプルを再掲します。
-
-![alt text](/images/spac/image-3.png)
+![alt text](/images/spac/image-6.png)
 
 ## 構成変更を定義書に反映する
 
