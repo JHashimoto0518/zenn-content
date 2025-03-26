@@ -58,24 +58,23 @@ CloudShell で利用する credential はマネージメントコンソールか
 
 ### Steampipe をセットアップする
 
-マネージメントコンソールにサインインし、ヘッダにある CloudShell のアイコン（`>.`の形をしています）をクリックします。
+https://steampipe.io/docs/integrations/aws_cloudshell
 
-以下のコマンドを CloudShell のターミナルで実行し、Steampipe と AWS プラグインをインストールします。
+マネージメントコンソールにサインインし、ヘッダにある CloudShell のアイコン（`>.`の形をしています）をクリックします。CloudShell のターミナルが起動したら、以下のコマンドを実行します。
 
-```bash
-sudo /bin/sh -c "$(curl -fsSL https://steampipe.io/install/steampipe.sh)"
-steampipe plugin install aws
-```
+1. Steampipe をダウンロードする
 
-https://steampipe.io/downloads?install=linux
+    ```bash
+    curl -s -L https://github.com/turbot/steampipe/releases/latest/download/steampipe_linux_amd64.tar.gz | tar -xzvf -
+    ls -l | grep steampipe
+    # -rwxr-xr-x. 1 cloudshell-user cloudshell-user 52228248 Feb  3 12:44 steampipe
+    ```
 
-:::message
-Steampipe はホームディレクトリの外部にインストールされるため、CloudShell のセッションが終了すると削除されます。永続化するには、ホームディレクトリに手動でインストールする必要があります。
+2. AWS プラグインをインストールする
 
-> Want more control over the install process?
->
-> Steampipe is also available as a binary executable (or you can build from source). To manually install Steampipe, unzip the executable and move it to a directory included in your system"s PATH. You can access the source, zipped executables and binary checksums from the releases section of the Steampipe Github repo.
-:::
+    ```bash
+    ./steampipe plugin install aws
+    ```
 
 ### EC2 インスタンスの構成情報を抽出する
 
@@ -113,7 +112,7 @@ https://hub.steampipe.io/plugins/turbot/aws/tables/aws_ec2_instance
 2. Steampipe を利用して SQL クエリを実行し、結果を CSV ファイルに抽出する
 
     ```bash
-    steampipe query --output csv ./ec2-ins.sql > ./ec2-ins.csv
+    ./steampipe query --output csv ./ec2-ins.sql > ./ec2-ins.csv
     ```
 
     抽出される CSV ファイルのサンプルです。※出力に ID 等が含まれますが、該当環境は検証後に削除済みです
